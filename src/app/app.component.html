@@ -1,0 +1,19 @@
+<div class="container">
+
+  <nav class="navbar navbar-dark bg-primary">
+    <div class="nav navbar-nav">
+      <a routerLink="/" class="nav-item nav-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
+        <i class="fa fa-home"></i> Home
+      </a>
+      <!-- <a routerLink="/about" class="nav-item nav-link" routerLinkActive="active">
+        <i class="fa fa-info-circle"></i> About
+      </a> -->
+      <a routerLink="/login" class="nav-item nav-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" style="float:right">
+        <i class="fa fa-sign-out"></i> Logout
+      </a>
+    </div>
+  </nav>
+
+  <router-outlet></router-outlet>
+
+</div>

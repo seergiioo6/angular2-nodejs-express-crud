@@ -1,0 +1,26 @@
+.table td, .table th {
+   text-align: center;
+   width: 13%;  
+}
+
+.form-inline .form-group {
+    display: inline-block;
+    margin-bottom: 0;
+    vertical-align: middle;
+    width: 11%;
+}
+
+.editRow {
+	width:100%;
+}
+
+.busqueda {
+	margin-top: 10px;
+    margin-bottom: 10px;
+    width: 20%;
+    float: right;
+    margin-right: 20px;
+}
+.pagination {
+    float: right
+}

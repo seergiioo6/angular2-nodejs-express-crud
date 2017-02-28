@@ -1,0 +1,117 @@
+<div class="card" *ngIf="isLoading">
+  <h4 class="card-header">Loading...</h4>
+  <div class="card-block text-xs-center">
+    <i class="fa fa-circle-o-notch fa-spin fa-3x"></i>
+  </div>
+</div>
+
+<app-toast [message]="toast.message"></app-toast>
+
+<div class="card" *ngIf="!isLoading">
+  <h4 class="card-header">Current sites ({{count}})</h4>
+  <input class="form-control col-md-3 busqueda" type="text" name="name" placeholder="Búsqueda" [(ngModel)]="busqueda" #username="ngModel" (ngModelChange)="busca()" >
+  
+  <div class="card-block">
+    <table class="table table-bordered table-striped">
+      <thead class="thead-default">
+        <tr>
+          <th>Site</th>
+          <th>Format</th>
+          <th>Impressions</th>
+          <!-- <th>Clicks</th> -->
+          <!-- <th>CTR</th> -->
+          <th>ECPM</th>
+          <th>Earnings</th>
+          <th *ngIf="isAdmin">Edit</th>
+          <th *ngIf="isAdmin">Delete</th>
+        </tr>
+      </thead>
+      <tbody *ngIf="websites.length === 0">
+        <tr>
+          <td colspan="12">There are no websites in the DB. Add a new website below.</td>
+        </tr>  
+      </tbody>
+      <tbody *ngIf="!isEditing">
+        <tr *ngFor="let website of websites">
+          <td>{{website.name}}</td>
+          <td>{{website.format}}</td>
+          <td>{{website.impressions}}</td>
+          <!-- <td>{{website.clicks}}</td> -->
+          <!-- <td>{{website.ctr}}</td> -->
+          <td>{{website.ecpm}}</td>
+          <td>{{website.earning}}</td>
+          <td *ngIf="isAdmin">
+            <button class="btn btn-sm btn-warning" (click)="enableEditing(website)"><i class="fa fa-pencil"></i> Edit</button> 
+          </td>
+          <td *ngIf="isAdmin">
+             <button class="btn btn-sm btn-danger" (click)="deleteWebsite(website)"><i class="fa fa-trash"></i> Delete</button>
+          </td>
+        </tr>  
+      </tbody>
+      <tbody *ngIf="isEditing">
+        <tr>
+          <td colspan="12">
+            <form class="form-inline formName" #form="ngForm" (ngSubmit)="editWebsite(website)" style="display:inline">
+              <div class="form-group">
+                  <input class="form-control editRow rowName" type="text" name="name" [(ngModel)]="website.name" placeholder="Name" required>
+              </div>
+              <div class="form-group">
+                <input class="form-control editRow" type="text" name="format" [(ngModel)]="website.format" placeholder="Format" required>
+              </div>
+              <div class="form-group">
+                <input class="form-control editRow" type="number" name="impressions" [(ngModel)]="website.impressions" placeholder="Impressions" step="any" min="0" required>
+              </div>
+             <!-- <div class="form-group">
+                <input class="form-control editRow" type="number" name="clicks" [(ngModel)]="website.clicks" placeholder="Clicks" step="any" min="0" required>
+              </div>
+               <div class="form-group">
+                <input class="form-control editRow" type="number" name="ctr" [(ngModel)]="website.ctr" placeholder="Ctr" step="any" min="0" required>
+              </div> -->
+               <div class="form-group">
+                <input class="form-control editRow" type="number" name="ecpm" [(ngModel)]="website.ecpm" placeholder="Ecpm" step="any" min="0" required>
+              </div>
+               <div class="form-group">
+                <input class="form-control editRow" type="number" name="earning" [(ngModel)]="website.earning" placeholder="Earning" step="any" min="0" required>
+              </div>
+              <button class="btn btn-sm btn-primary" type="submit" [disabled]="!form.form.valid"><i class="fa fa-floppy-o"></i> Save</button>
+            </form>
+            <button class="btn btn-sm btn-warning" (click)="cancelEditing()"><i class="fa fa-times"></i> Cancel</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="pagination">
+      <button class="button btn btn-primary" (click)="previous()">Previous</button> <button class="button btn btn-primary" (click)="next()">Next</button>
+    </div>
+  </div>
+</div>
+
+<div class="card" *ngIf="!isEditing && isAdmin">
+  <h4 class="card-header">Add new website</h4>
+  <div class="card-block">
+    <form class="form-inline" [formGroup]="addWebsiteForm" (ngSubmit)="addWebsite()" style="text-align:center">
+      <div class="form-group formName">
+          <input class="form-control mb-2 mr-sm-2 mb-sm-0 editRow rowName" type="text" name="name" formControlName="name" placeholder="Name">
+      </div>
+      <div class="form-group">
+        <input class="form-control mb-2 mr-sm-2 mb-sm-0 editRow" type="text" name="format" formControlName="format" placeholder="Format">
+      </div>
+      <div class="form-group">
+        <input class="form-control mb-2 mr-sm-2 mb-sm-0 editRow" type="number" name="impressions" formControlName="impressions" placeholder="Impressions" step="any" min="0">
+      </div>
+      <!-- <div class="form-group">
+        <input class="form-control mb-2 mr-sm-2 mb-sm-0 editRow" type="number" name="clicks" formControlName="clicks" placeholder="Clicks" step="any" min="0">
+      </div>
+      <div class="form-group">
+        <input class="form-control mb-2 mr-sm-2 mb-sm-0 editRow" type="number" name="ctr" formControlName="ctr" placeholder="Ctr" step="any" min="0">
+      </div> -->
+      <div class="form-group">
+        <input class="form-control mb-2 mr-sm-2 mb-sm-0 editRow" type="number" name="ecpm" formControlName="ecpm" placeholder="ECPM" step="any" min="0">
+      </div>
+      <div class="form-group">
+        <input class="form-control mb-2 mr-sm-2 mb-sm-0 editRow" type="number" name="earning" formControlName="earning" placeholder="Earning" step="any" min="0">
+      </div>
+      <button class="btn btn-primary mb-2 mr-sm-2 mb-sm-0" type="submit" [disabled]="!addWebsiteForm.valid"><i class="fa fa-floppy-o"></i> Add</button>
+    </form>
+  </div>
+</div>
